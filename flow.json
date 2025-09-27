@@ -1,0 +1,39 @@
+{
+  "emulators": {
+    "default": {
+      "port": 3569,
+      "serviceAccount": "emulator-account"
+    }
+  },
+  "contracts": {
+    "ChainMeshActions": "./cadence/contracts/ChainMeshActions.cdc"
+  },
+  "accounts": {
+    "emulator-account": {
+      "address": "f8d6e0586b0a20c7",
+      "key": "06e57ecc60f17cb69285414195c995a0bdb9d45cec7390cf6a754833a2a9b9d0"
+    },
+    "testnet-account": {
+      "address": "0x7e7e90cac96ea9b1",
+      "key": {
+        "type": "hex",
+        "index": 0,
+        "signatureAlgorithm": "ECDSA_P256",
+        "hashAlgorithm": "SHA3_256",
+        "privateKey": "$FLOW_PRIVATE_KEY"
+      }
+    }
+  },
+  "networks": {
+    "emulator": "127.0.0.1:3569",
+    "testnet": "access.testnet.nodes.onflow.org:9000"
+  },
+  "deployments": {
+    "emulator": {
+      "emulator-account": ["ChainMeshActions"]
+    },
+    "testnet": {
+      "testnet-account": ["ChainMeshActions"]
+    }
+  }
+}

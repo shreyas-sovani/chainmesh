@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "agents:start": "node -e \"fetch('http://localhost:3000/api/agents/start', {method: 'POST'}).then(r=>r.json()).then(c=>console.log(c)).catch(console.error)\"",
+    "agents:stop": "node -e \"fetch('http://localhost:3000/api/agents/stop', {method: 'POST'}).then(r=>r.json()).then(c=>console.log(c)).catch(console.error)\"",
+    "agents:status": "node -e \"fetch('http://localhost:3000/api/agents/status').then(r=>r.json()).then(c=>console.log(c)).catch(console.error)\"",
+    "test:agents": "tsx scripts/test-agents.ts"
   },
   "dependencies": {
     "@babel/parser": "^7.28.4",
@@ -115,6 +119,7 @@
     "eslint": "^9.35.0",
     "eslint-config-next": "^15.5.3",
     "tailwindcss": "^4",
+    "tsx": "^4.20.6",
     "tw-animate-css": "^1.3.8",
     "typescript": "^5"
   }
