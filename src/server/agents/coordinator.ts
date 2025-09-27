@@ -1,12 +1,12 @@
 import { getFlowService } from '@/server/services/flow';
 import { bus, getSchedules, upsertSchedule } from '@/server/store/memoryStore';
-import type { AgentStatus, Schedule } from '@/server/types';
-import { scanMarkets } from './scout';
-import { maybeExecute } from './executor';
+import type { AgentStatus, AgentContextState, Schedule } from '@/server/types';
+import { getAgentGraph } from '@/server/langgraph/graph';
 
 let status: AgentStatus = { coordinatorRunning: false };
 let pollingInterval: NodeJS.Timeout | null = null;
 let lastProcessedHeight = 0;
+let graphRunner: ReturnType<typeof getAgentGraph> | null = null;
 
 async function pollForEvents(): Promise<void> {
   try {
@@ -33,21 +33,26 @@ async function pollForEvents(): Promise<void> {
 
 async function runAgentPipeline(): Promise<void> {
   try {
-    // Step 1: Scan markets for opportunities
-    const opportunity = await scanMarkets();
-    if (!opportunity) {
-      console.log('No profitable opportunities found');
+    if (!graphRunner) {
+      graphRunner = getAgentGraph();
+    }
+
+    const initialState: AgentContextState = {};
+    const result = await graphRunner.invoke(initialState);
+
+    if (!result.opportunity) {
+      console.log('LangGraph run completed without opportunity.');
       return;
     }
 
-    console.log(`Found opportunity: ${opportunity.id} with ${opportunity.expectedProfitBps}bps profit`);
-
-    // Step 2: Execute the opportunity
-    await maybeExecute(opportunity);
-
-    console.log(`Successfully processed opportunity: ${opportunity.id}`);
+    console.log(
+      `LangGraph run completed. Opportunity ${result.opportunity.id} execution status: ${
+        result.execution?.status ?? 'skipped'
+      }`
+    );
   } catch (error) {
-    console.error('Error in agent pipeline:', error);
+    status.lastError = error instanceof Error ? error.message : String(error);
+    console.error('Error running LangGraph pipeline:', error);
   }
 }
 

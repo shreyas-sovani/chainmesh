@@ -83,7 +83,7 @@ export class FlowService {
   async tickScheduler(now: number): Promise<void> {
     // Call the tick transaction on the contract
     const script = `
-      import ChainMeshActions from 0xf8d6e0586b0a20c7
+      import ChainMeshActions from 0x7e7e90cac96ea9b1
 
       transaction(now: UFix64) {
         prepare(signer: AuthAccount) {}
@@ -108,7 +108,7 @@ export class FlowService {
   ): Promise<void> {
     // Call the report execution transaction
     const script = `
-      import ChainMeshActions from 0xf8d6e0586b0a20c7
+      import ChainMeshActions from 0x7e7e90cac96ea9b1
 
       transaction(
         id: UInt64,
@@ -152,7 +152,7 @@ export class FlowService {
         return { events: [], latestHeight };
       }
 
-      const events = await this.getEvents('A.f8d6e0586b0a20c7.ChainMeshActions.TaskReady', lastProcessedHeight + 1, latestHeight);
+      const events = await this.getEvents('A.7e7e90cac96ea9b1.ChainMeshActions.TaskReady', lastProcessedHeight + 1, latestHeight);
 
       return { events, latestHeight };
     } catch (error) {

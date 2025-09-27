@@ -43,6 +43,13 @@ export interface ExecutionResult {
   createdAt: number;
 }
 
+export interface AgentContextState {
+  opportunity?: ArbitrageOpportunity;
+  proof?: ProofResult;
+  execution?: ExecutionResult;
+  error?: string;
+}
+
 export interface AgentStatus {
   coordinatorRunning: boolean;
   lastCallbackAt?: number;
